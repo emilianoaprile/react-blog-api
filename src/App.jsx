@@ -18,13 +18,36 @@ function App() {
     // console.log(response)
   }
 
+  // fetch tags 
+  const [tags, setTags] = useState([])
+  const fetchTags = async () => {
+    const url = `${apiUrl}/tags`
+    const {data: response} = await axios.get(url)
+    setTags(response)
+    console.log('Tags:', response)
+  }
+
+  // fetch categories
+  const [categories, setCategories] = useState([])
+  const fetchCategories = async () => {
+    const url = `${apiUrl}/categories`
+    const {data: response} = await axios.get(url)
+    setCategories(response)
+    console.log('Categories:', response)
+  }
+
   useEffect(() => {
     fetchPosts()
+    fetchTags()
+    fetchCategories()
   }, [])
 
   return (
     <>
-      <Form />
+      <Form 
+        tags={tags}
+        categories={categories}
+      />
       <PostsList 
         response={response}
       />
