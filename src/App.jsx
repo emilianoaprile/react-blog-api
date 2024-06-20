@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import Form from './components/Form.jsx'
+import PostsList from './components/PostsList.jsx'
 import axios from 'axios';
 const apiUrl = import.meta.env.VITE_BASE_API_URL
 
@@ -14,7 +15,7 @@ function App() {
     const url = `${apiUrl}/posts`
     const {data: response} = await axios.get(url)
     setResponse(response)
-    console.log(response)
+    // console.log(response)
   }
 
   useEffect(() => {
@@ -24,6 +25,9 @@ function App() {
   return (
     <>
       <Form />
+      <PostsList 
+        response={response}
+      />
     </>
   )
 }

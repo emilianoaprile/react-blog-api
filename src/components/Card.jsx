@@ -1,12 +1,14 @@
-const Card = ({title, imageUrl, content, category, tags, published }) => {
+const Card = (post) => {
+
+    console.log('Card prop del post:', post);
     return (
         <div className="card">
-            <h2 className="cardTitle" >{title}</h2>
-            <img className="cardImg"  src={imageUrl} alt={title} />
-            <p className="cardContent" >{content}</p>
-            <p className="cardContent" ><strong>Categoria:</strong>{category}</p>
-            <p className="cardContent" ><strong>Tags:</strong>{tags}</p>
-            <p className="cardContent" >{published}</p>
+            <h2 className="cardTitle" >{post.post.title}</h2>
+            <img className="cardImg"  src={post.post.image} alt={post.post.title} />
+            <p className="cardContent" >{post.content}</p>
+            <p className="cardContent" ><strong>Categoria:</strong>{post.post.category.name}</p>
+            <p className="cardContent" ><strong>Tags:</strong></p>
+            <p className="cardContent" >{post.post.published}</p>
         </div>
     )
 }
