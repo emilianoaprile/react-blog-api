@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import Card from "./Card.jsx";
 
 function Form() {
-  const tags = ["Economia", "Arte", "Tecnologia", "Scienza"];
   const initialData = {
     title: "",
     image: "",
@@ -13,7 +12,6 @@ function Form() {
   };
 
   const [formData, setFormData] = useState(initialData);
-  const [posts, setPosts] = useState([]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -51,7 +49,7 @@ function Form() {
   return (
     <>
       <section className="formSection">
-        <div className="container-sm">
+        {/* <div className="container-sm">
           <h2 className="title">Aggiungi un post</h2>
           <form onSubmit={handleSubmit}>
             <div className="formWrapper">
@@ -129,34 +127,8 @@ function Form() {
               </button>
             </div>
           </form>
-        </div>
+        </div> */}
       </section>
-
-      {posts.length > 0 ? (
-        <section>
-          <h2 className="title">Posts</h2>
-
-          <div className="container-lg">
-            <div className="posts">
-              {posts.map((p, index) => (
-                <Card
-                  key={`post${index}`}
-                  title={p.title}
-                  imageUrl={p.image}
-                  content={p.content}
-                  category={p.category}
-                  tags={p.tags}
-                  published={p.published}
-                />
-              ))}
-            </div>
-          </div>
-        </section>
-      ) : (
-        <div className="container-lg">
-          <p className="title">Nessun post aggiunto</p>
-        </div>
-      )}
     </>
   );
 }
