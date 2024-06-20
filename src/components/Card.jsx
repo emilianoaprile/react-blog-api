@@ -7,7 +7,13 @@ const Card = (post) => {
             <img className="cardImg"  src={post.post.image} alt={post.post.title} />
             <p className="cardContent" >{post.post.content}</p>
             <p className="cardContent" ><strong>Categoria:</strong>{post.post.category.name}</p>
-            <p className="cardContent" ><strong>Tags:</strong></p>
+            <div className="cardContent" ><strong>Tags:</strong>
+                <ul className="tags">
+                    {post.post.tags.map((tag, index) => (
+                        <li className="tag" key={index}>{`# ${tag.name}`}</li>
+                    ))}
+                </ul>
+            </div>
             <p className="cardContent" >{post.post.published}</p>
         </div>
     )
