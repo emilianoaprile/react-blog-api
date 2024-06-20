@@ -47,6 +47,9 @@ function App() {
       <Form 
         tags={tags}
         categories={categories}
+        onCreate= {() =>  {
+          fetchPosts()
+        }}
       />
       <PostsList 
         response={response}

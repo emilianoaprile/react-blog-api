@@ -1,6 +1,6 @@
 const Card = (post) => {
 
-    console.log('Card prop del post:', post);
+    // console.log('Card prop del post:', post);
     return (
         <div className="card">
             <h2 className="cardTitle" >{post.post.title}</h2>

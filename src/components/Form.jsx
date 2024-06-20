@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Card from "./Card.jsx";
 
-function Form() {
+function Form(tags, categories, onCreate) {
   const initialData = {
     title: "",
     image: "",
@@ -13,122 +13,121 @@ function Form() {
 
   const [formData, setFormData] = useState(initialData);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     console.log(formData);
-    setPosts((posts) => [...posts, formData]);
-    setFormData(initialData);
+    const res = await axios.post(`${apiUrl}/posts`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    console.log(res);
+    if (res.status < 400) {
+      onCreate();
+    }
   };
 
-  const handleField = (event) => {
-    const value =
-      event.target.type === "checkbox"
-        ? event.target.checked
-        : event.target.value;
-    if (event.target.name === "tags") {
-      const updatedTags = value
-        ? [...formData.tags, event.target.value]
-        : formData.tags.filter((tag) => tag !== event.target.value);
-      setFormData((formData) => ({
-        ...formData,
-        tags: updatedTags,
-      }));
-    } else if (event.target.name === "published") {
-      setFormData((formData) => ({
-        ...formData,
-        published: value,
-      }));
-    } else {
-      setFormData((formData) => ({
-        ...formData,
-        [event.target.name]: value,
-      }));
-    }
+  const handleField = (name, value) => {
+    setFormData((curr) => ({
+      ...curr,
+      [name]: value,
+    }));
   };
 
   return (
     <>
-      <section className="formSection">
-        {/* <div className="container-sm">
-          <h2 className="title">Aggiungi un post</h2>
-          <form onSubmit={handleSubmit}>
-            <div className="formWrapper">
-              <input
-                type="text"
-                name="title"
-                placeholder="Inserisci un titolo.."
-                value={formData.title}
-                onChange={handleField}
-                required
-              />
+      <form onSubmit={handleSubmit}>
+        {Object.keys(initialData).map((name, index) => {
+          const value = initialData[name];
+          switch (typeof value) {
+            case "boolean":
+              return (
+                <label key={`formElement${index}`}>
+                  <input
+                    type="checkbox"
+                    name={name}
+                    checked={formData[name]}
+                    onChange={(e) => handleField(name, e.target.checked)}
+                  />
+                  {name}
+                </label>
+              );
+            case "object":
+              return (
+                <div key={`formElement${index}`}>
+                  <p>Tags:</p>
+                  <ul>
+                    {tags.map((tag, index) => (
+                      <li key={`tag${index}`}>
+                        <input
+                          type="checkbox"
+                          name={name}
+                          value={tag.id}
+                          checked={formData[name].includes(tag.id)}
+                          onChange={(e) => {
+                            const curr = formData.tags.includes(id);
+                            const newTags = curr.includes(id)
+                              ? curr.filter((el) => el != id)
+                              : [...curr, id];
+                            handleField("tags", newTags);
+                          }}
+                        />
+                        {tag.name}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              );
+            default:
+              if(name === 'categoryId') {
+                return (
+                  <div key={`formElement${index}`}>
+                    <p>Categoria:</p>
+                    <select 
+                      name="categoryId" 
+                      value={formData[name]}
+                      onChange={(e) => handleField(name, Number(e.target.value))}
 
-              <input
-                type="text"
-                name="image"
-                placeholder="Scegli un immagine..."
-                value={formData.image}
-                onChange={handleField}
-              />
+                    >
+                      {categories.map((category, index) => (
+                        <option key={`categoryId${index}`} value={category.id}>{category.name}</option>
+                      ))}
+                    </select>
+                  </div>
+                )
+              }
 
-              <textarea
-                className="formTextArea"
-                name="content"
-                placeholder="Inserisci il contenuto.."
-                value={formData.content}
-                onChange={handleField}
-                required
-              ></textarea>
-
-              <select
-                className="formSelect"
-                name="category"
-                value={formData.category}
-                onChange={handleField}
-                required
-              >
-                <option value="">Seleziona una categoria</option>
-                <option value="Tecnologia">Tecnologia</option>
-                <option value="Scienza">Scienza</option>
-                <option value="Arte">Arte</option>
-                <option value="Economia">Economia</option>
-              </select>
-
-              <div className="formTags">
-                <p className="formTagsTitle"><strong>Tags:</strong></p>
-                {tags.map((tag) => (
-                  <label className="formTagLabel" key={tag}>
-                    <input
-                    className="formTagInput"
-                      type="checkbox"
-                      name="tags"
-                      value={tag}
-                      checked={formData.tags.includes(tag)}
-                      onChange={handleField}
+              if(name === 'image') {
+                return (
+                  <label key={`formElement${index}`}>
+                    {name}
+                    <input 
+                      type="file" 
+                      onChange={(e) => handleField(name, e.target.files[0])}
                     />
-                    {tag}
+
                   </label>
-                ))}
-              </div>
+                )
+              }
 
-              <label htmlFor="published" className="publishedLabel">
-                Pubblicato
+              return (
                 <input
-                  className="publishedInput"
-                  type="checkbox"
-                  name="published"
-                  id="published"
-                  checked={formData.published}
-                  onChange={handleField}
+                    key={`formElement${index}`} 
+                    required
+                    name={name}
+                    type={typeof value === 'number' ? 'number' : 'text'}
+                    placeholder={name}
+                    value={formData[name]}
+                    onChange={(e) => handleField(name, typeof value === 'number' ? Number(e.target.value) : e.target.value)}
                 />
-              </label>
+            )
+          }
+        })}
 
-              <button className="btn btnAdd" type="submit">
-                Aggiungi
-              </button>
-            </div>
-          </form>
-        </div> */}
-      </section>
+        <button className="btn btnAdd" type="submit">
+          Aggiungi
+        </button>
+      </form>
     </>
   );
 }

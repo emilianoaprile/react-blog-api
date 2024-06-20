@@ -3,7 +3,7 @@ import Card from './Card.jsx'
 
 const Posts = ({response}) => {
 
-    console.log('response dentro a PostsList:', response)
+    // console.log('response dentro a PostsList:', response)
     
     return (
         <>  
